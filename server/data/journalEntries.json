@@ -1,0 +1,62 @@
+[
+  {
+    "id": "journal-1",
+    "userId": "demo-user-id",
+    "date": "2026-08-04T04:16:52.659Z",
+    "title": "Overcoming the Midterm Stress",
+    "content": "I have been feeling really exhausted lately. The exam pressure is building up and I spent the whole night study session typing away on the computer. I felt highly stressed but after writing this down, I feel slightly better. I need to take a break.",
+    "privateMode": false,
+    "gratitude": "Grateful for Aarav who brought me a hot coffee late night.",
+    "reflection": "I should plan my revision schedule better so I do not have to pull all-nighters.",
+    "summary": "Felt exhausted due to exam preparation and late night study. Writing it down helped manage the stress.",
+    "emotions": [
+      "Exhausted",
+      "Anxious",
+      "Determined"
+    ],
+    "triggers": [
+      "Exam pressure",
+      "Lack of sleep",
+      "Coffee"
+    ]
+  },
+  {
+    "id": "journal-2",
+    "userId": "demo-user-id",
+    "date": "2026-08-07T04:16:52.659Z",
+    "title": "A Calmer Morning Walk",
+    "content": "Woke up early today and went for a walk in the park. The air was cool and crisp. I sat near the pond for 10 minutes just listening to the birds. It felt incredibly healing. Productivity was great today.",
+    "privateMode": false,
+    "gratitude": "Grateful for the beautiful nature and sunny skies.",
+    "reflection": "I need to make morning walks a consistent part of my routine.",
+    "summary": "Had a peaceful morning walk in the park which improved mood and boosted daily productivity.",
+    "emotions": [
+      "Calm",
+      "Peaceful",
+      "Joyful"
+    ],
+    "triggers": [
+      "Morning walk",
+      "Nature",
+      "Quiet time"
+    ]
+  },
+  {
+    "id": "jour-1786198248830-257",
+    "userId": "demo-user-id",
+    "date": "2026-08-08T14:10:48.828Z",
+    "title": "What I did today?",
+    "content": "I solved DSA and practiced Web Development.",
+    "privateMode": false,
+    "gratitude": "",
+    "reflection": "",
+    "summary": "User reflected on their daily experience and thoughts.",
+    "emotions": [
+      "Calm",
+      "Reflective"
+    ],
+    "triggers": [
+      "Routine"
+    ]
+  }
+]

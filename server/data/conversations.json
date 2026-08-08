@@ -1,0 +1,23 @@
+[
+  {
+    "id": "chat-1",
+    "userId": "demo-user-id",
+    "role": "model",
+    "text": "Hello Nidhi! I am your MindSync AI Companion. How can I help you support your wellness journey today?",
+    "createdAt": "2026-08-08T04:06:52.663Z"
+  },
+  {
+    "id": "conv-1786163383004-736",
+    "userId": "demo-user-id",
+    "role": "user",
+    "text": "I am feeling highly anxious about exams",
+    "createdAt": "2026-08-08T04:29:42.998Z"
+  },
+  {
+    "id": "conv-1786163383010-431",
+    "userId": "demo-user-id",
+    "role": "model",
+    "text": "I hear you, and it is completely okay to feel anxious. Let's take a slow breath together. Inhale for 4 seconds, hold for 4, and let it go. Remember, you don't have to navigate everything at once. Focus on just the next small step. What is one tiny thing you can control right now?",
+    "createdAt": "2026-08-08T04:29:43.005Z"
+  }
+]

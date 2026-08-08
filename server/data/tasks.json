@@ -1,0 +1,58 @@
+[
+  {
+    "id": "task-1",
+    "userId": "demo-user-id",
+    "title": "20-minute morning walk",
+    "completed": true,
+    "date": "2026-08-08",
+    "category": "Health"
+  },
+  {
+    "id": "task-2",
+    "userId": "demo-user-id",
+    "title": "Drink 2L water",
+    "completed": true,
+    "date": "2026-08-08",
+    "category": "Habit"
+  },
+  {
+    "id": "task-3",
+    "userId": "demo-user-id",
+    "title": "One Pomodoro focus session",
+    "completed": false,
+    "date": "2026-08-08",
+    "category": "Productivity"
+  },
+  {
+    "id": "task-4",
+    "userId": "demo-user-id",
+    "title": "Sleep before 11 PM",
+    "completed": false,
+    "date": "2026-08-08",
+    "category": "Sleep"
+  },
+  {
+    "id": "task-5",
+    "userId": "demo-user-id",
+    "title": "Complete assignment draft",
+    "completed": true,
+    "date": "2026-08-08",
+    "category": "Studies"
+  },
+  {
+    "id": "task-6",
+    "userId": "demo-user-id",
+    "title": "Read 10 pages of book",
+    "completed": true,
+    "date": "2026-08-08",
+    "category": "Habit"
+  },
+  {
+    "id": "task-1786163473043-732",
+    "userId": "demo-user-id",
+    "title": "Verify presentation slide drafts",
+    "category": "Studies",
+    "completed": true,
+    "date": "2026-08-08"
+  }
+]

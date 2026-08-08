@@ -1,0 +1,30 @@
+[
+  {
+    "id": "demo-user-id",
+    "email": "demo@mindsync.com",
+    "password": "$2a$10$dyIO13noUyNtPxS52K1EyOv1mKbYYV0Zc6JcRHqrBcyKu/j.RTzJK",
+    "name": "Nidhi",
+    "age": 21,
+    "occupation": "Student",
+    "stressLevel": 6,
+    "sleepHours": 6.5,
+    "goals": [
+      "Reduce Anxiety",
+      "Prevent Burnout",
+      "Improve focus",
+      "Sleep before 11 PM"
+    ],
+    "habits": [
+      "Drink Water",
+      "Workout",
+      "Meditation",
+      "Reading"
+    ],
+    "preferredWakeTime": "06:30",
+    "preferredSleepTime": "22:30",
+    "workoutFrequency": "3 times/week",
+    "screenTime": "6.5 hours",
+    "onboarded": true,
+    "createdAt": "2026-08-08T04:16:52.656Z"
+  }
+]

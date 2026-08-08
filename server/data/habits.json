@@ -1,0 +1,59 @@
+[
+  {
+    "id": "habit-1",
+    "userId": "demo-user-id",
+    "name": "Drink Water",
+    "target": "2 Liters",
+    "frequency": "Daily",
+    "streak": 6,
+    "history": {
+      "2026-08-07": true,
+      "2026-08-06": true,
+      "2026-08-05": true,
+      "2026-08-04": true,
+      "2026-08-03": true,
+      "2026-08-08": true
+    },
+    "createdAt": "2026-08-08T04:16:52.659Z"
+  },
+  {
+    "id": "habit-2",
+    "userId": "demo-user-id",
+    "name": "Workout",
+    "target": "30 mins",
+    "frequency": "Daily",
+    "streak": 2,
+    "history": {
+      "2026-08-07": true,
+      "2026-08-06": true
+    },
+    "createdAt": "2026-08-08T04:16:52.659Z"
+  },
+  {
+    "id": "habit-3",
+    "userId": "demo-user-id",
+    "name": "Meditation",
+    "target": "10 mins",
+    "frequency": "Daily",
+    "streak": 4,
+    "history": {
+      "2026-08-07": true,
+      "2026-08-06": true,
+      "2026-08-05": true,
+      "2026-08-04": true
+    },
+    "createdAt": "2026-08-08T04:16:52.659Z"
+  },
+  {
+    "id": "habit-4",
+    "userId": "demo-user-id",
+    "name": "Reading",
+    "target": "10 pages",
+    "frequency": "Daily",
+    "streak": 1,
+    "history": {
+      "2026-08-07": true
+    },
+    "createdAt": "2026-08-08T04:16:52.659Z"
+  }
+]

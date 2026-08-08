@@ -1,0 +1,30 @@
+[
+  {
+    "id": "notif-1",
+    "userId": "demo-user-id",
+    "text": "Time to drink water! Grab a fresh glass.",
+    "read": false,
+    "createdAt": "2026-08-08T04:16:52.662Z"
+  },
+  {
+    "id": "notif-2",
+    "userId": "demo-user-id",
+    "text": "Take a deep breath. Inhale for 4s, hold for 4s, exhale for 4s.",
+    "read": false,
+    "createdAt": "2026-08-08T03:46:52.662Z"
+  },
+  {
+    "id": "notif-3",
+    "userId": "demo-user-id",
+    "text": "Focus session completed. Rest your eyes for 5 minutes!",
+    "read": true,
+    "createdAt": "2026-08-08T02:16:52.663Z"
+  },
+  {
+    "id": "noti-1786198761703-58",
+    "userId": "demo-user-id",
+    "text": "🚨 SOS triggered! An alert notification has been simulated and sent to: Aarav (Brother), Priya (Best Friend).",
+    "read": false,
+    "createdAt": "2026-08-08T14:19:21.701Z"
+  }
+]

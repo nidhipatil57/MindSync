@@ -1,0 +1,72 @@
+[
+  {
+    "id": "sleep-6",
+    "userId": "demo-user-id",
+    "date": "2026-08-02",
+    "duration": 7.2,
+    "bedtime": "22:45",
+    "wakeTime": "06:00",
+    "quality": 82,
+    "sleepDebt": 0.7999999999999998
+  },
+  {
+    "id": "sleep-5",
+    "userId": "demo-user-id",
+    "date": "2026-08-03",
+    "duration": 6.8,
+    "bedtime": "23:15",
+    "wakeTime": "06:03",
+    "quality": 78,
+    "sleepDebt": 1.2000000000000002
+  },
+  {
+    "id": "sleep-4",
+    "userId": "demo-user-id",
+    "date": "2026-08-04",
+    "duration": 6,
+    "bedtime": "23:30",
+    "wakeTime": "05:30",
+    "quality": 70,
+    "sleepDebt": 2
+  },
+  {
+    "id": "sleep-3",
+    "userId": "demo-user-id",
+    "date": "2026-08-05",
+    "duration": 8,
+    "bedtime": "22:30",
+    "wakeTime": "06:30",
+    "quality": 90,
+    "sleepDebt": 0
+  },
+  {
+    "id": "sleep-2",
+    "userId": "demo-user-id",
+    "date": "2026-08-06",
+    "duration": 5.5,
+    "bedtime": "00:30",
+    "wakeTime": "06:00",
+    "quality": 50,
+    "sleepDebt": 2.5
+  },
+  {
+    "id": "sleep-1",
+    "userId": "demo-user-id",
+    "date": "2026-08-07",
+    "duration": 7,
+    "bedtime": "23:00",
+    "wakeTime": "06:00",
+    "quality": 75,
+    "sleepDebt": 1
+  },
+  {
+    "id": "sleep-0",
+    "userId": "demo-user-id",
+    "date": "2026-08-08",
+    "duration": 6.5,
+    "bedtime": "23:45",
+    "wakeTime": "06:15",
+    "quality": 65,
+    "sleepDebt": 1.5
+  }
+]

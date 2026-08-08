@@ -1,0 +1,288 @@
+[
+  {
+    "id": "mood-14",
+    "userId": "demo-user-id",
+    "date": "2026-07-25T04:16:52.657Z",
+    "mood": "Calm",
+    "intensity": 6,
+    "stress": 7,
+    "energy": 7,
+    "social": 7,
+    "sleepQuality": 80,
+    "productivity": 10,
+    "notes": "Feeling okay, keeping up with the routine.",
+    "reasons": [
+      "Studies",
+      "Deadline"
+    ]
+  },
+  {
+    "id": "mood-13",
+    "userId": "demo-user-id",
+    "date": "2026-07-26T04:16:52.658Z",
+    "mood": "Stressed",
+    "intensity": 5,
+    "stress": 6,
+    "energy": 6,
+    "social": 6,
+    "sleepQuality": 70,
+    "productivity": 9,
+    "notes": "Feeling okay, keeping up with the routine.",
+    "reasons": [
+      "Friends",
+      "Exercise"
+    ]
+  },
+  {
+    "id": "mood-12",
+    "userId": "demo-user-id",
+    "date": "2026-07-27T04:16:52.658Z",
+    "mood": "Focused",
+    "intensity": 4,
+    "stress": 5,
+    "energy": 5,
+    "social": 5,
+    "sleepQuality": 60,
+    "productivity": 8,
+    "notes": "Feeling okay, keeping up with the routine.",
+    "reasons": [
+      "Work",
+      "Sleep"
+    ]
+  },
+  {
+    "id": "mood-11",
+    "userId": "demo-user-id",
+    "date": "2026-07-28T04:16:52.658Z",
+    "mood": "Sad",
+    "intensity": 9,
+    "stress": 4,
+    "energy": 8,
+    "social": 8,
+    "sleepQuality": 80,
+    "productivity": 7,
+    "notes": "Feeling okay, keeping up with the routine.",
+    "reasons": [
+      "Health"
+    ]
+  },
+  {
+    "id": "mood-10",
+    "userId": "demo-user-id",
+    "date": "2026-07-29T04:16:52.658Z",
+    "mood": "Tired",
+    "intensity": 8,
+    "stress": 3,
+    "energy": 7,
+    "social": 7,
+    "sleepQuality": 70,
+    "productivity": 6,
+    "notes": "Feeling okay, keeping up with the routine.",
+    "reasons": [
+      "Routine"
+    ]
+  },
+  {
+    "id": "mood-9",
+    "userId": "demo-user-id",
+    "date": "2026-07-30T04:16:52.658Z",
+    "mood": "Anxious",
+    "intensity": 7,
+    "stress": 7,
+    "energy": 6,
+    "social": 6,
+    "sleepQuality": 60,
+    "productivity": 10,
+    "notes": "Feeling okay, keeping up with the routine.",
+    "reasons": [
+      "Rest",
+      "Nature"
+    ]
+  },
+  {
+    "id": "mood-8",
+    "userId": "demo-user-id",
+    "date": "2026-07-31T04:16:52.658Z",
+    "mood": "Joyful",
+    "intensity": 6,
+    "stress": 6,
+    "energy": 5,
+    "social": 5,
+    "sleepQuality": 80,
+    "productivity": 9,
+    "notes": "Feeling okay, keeping up with the routine.",
+    "reasons": [
+      "Studies",
+      "Deadline"
+    ]
+  },
+  {
+    "id": "mood-7",
+    "userId": "demo-user-id",
+    "date": "2026-08-01T04:16:52.658Z",
+    "mood": "Calm",
+    "intensity": 5,
+    "stress": 5,
+    "energy": 8,
+    "social": 8,
+    "sleepQuality": 70,
+    "productivity": 8,
+    "notes": "Feeling okay, keeping up with the routine.",
+    "reasons": [
+      "Friends",
+      "Exercise"
+    ]
+  },
+  {
+    "id": "mood-6",
+    "userId": "demo-user-id",
+    "date": "2026-08-02T04:16:52.658Z",
+    "mood": "Stressed",
+    "intensity": 4,
+    "stress": 4,
+    "energy": 7,
+    "social": 7,
+    "sleepQuality": 60,
+    "productivity": 7,
+    "notes": "Feeling okay, keeping up with the routine.",
+    "reasons": [
+      "Work",
+      "Sleep"
+    ]
+  },
+  {
+    "id": "mood-5",
+    "userId": "demo-user-id",
+    "date": "2026-08-03T04:16:52.658Z",
+    "mood": "Focused",
+    "intensity": 9,
+    "stress": 3,
+    "energy": 6,
+    "social": 6,
+    "sleepQuality": 80,
+    "productivity": 6,
+    "notes": "Feeling okay, keeping up with the routine.",
+    "reasons": [
+      "Health"
+    ]
+  },
+  {
+    "id": "mood-4",
+    "userId": "demo-user-id",
+    "date": "2026-08-04T04:16:52.658Z",
+    "mood": "Stressed",
+    "intensity": 9,
+    "stress": 9,
+    "energy": 3,
+    "social": 5,
+    "sleepQuality": 40,
+    "productivity": 2,
+    "notes": "Extremely overwhelmed by the upcoming midterms and late night studies.",
+    "reasons": [
+      "Studies",
+      "Sleep"
+    ]
+  },
+  {
+    "id": "mood-3",
+    "userId": "demo-user-id",
+    "date": "2026-08-05T04:16:52.658Z",
+    "mood": "Tired",
+    "intensity": 7,
+    "stress": 6,
+    "energy": 8,
+    "social": 8,
+    "sleepQuality": 60,
+    "productivity": 9,
+    "notes": "Feeling okay, keeping up with the routine.",
+    "reasons": [
+      "Rest",
+      "Nature"
+    ]
+  },
+  {
+    "id": "mood-2",
+    "userId": "demo-user-id",
+    "date": "2026-08-06T04:16:52.658Z",
+    "mood": "Anxious",
+    "intensity": 6,
+    "stress": 5,
+    "energy": 7,
+    "social": 7,
+    "sleepQuality": 80,
+    "productivity": 8,
+    "notes": "Feeling okay, keeping up with the routine.",
+    "reasons": [
+      "Studies",
+      "Deadline"
+    ]
+  },
+  {
+    "id": "mood-1",
+    "userId": "demo-user-id",
+    "date": "2026-08-07T04:16:52.658Z",
+    "mood": "Joyful",
+    "intensity": 5,
+    "stress": 4,
+    "energy": 6,
+    "social": 6,
+    "sleepQuality": 70,
+    "productivity": 7,
+    "notes": "Feeling okay, keeping up with the routine.",
+    "reasons": [
+      "Friends",
+      "Exercise"
+    ]
+  },
+  {
+    "id": "mood-0",
+    "userId": "demo-user-id",
+    "date": "2026-08-08T04:16:52.658Z",
+    "mood": "Calm",
+    "intensity": 4,
+    "stress": 3,
+    "energy": 5,
+    "social": 5,
+    "sleepQuality": 60,
+    "productivity": 6,
+    "notes": "Feeling okay, keeping up with the routine.",
+    "reasons": [
+      "Work",
+      "Sleep"
+    ]
+  },
+  {
+    "id": "mood-1786163309044-407",
+    "userId": "demo-user-id",
+    "date": "2026-08-08T04:28:29.041Z",
+    "mood": "Focused",
+    "intensity": 8,
+    "stress": 4,
+    "energy": 6,
+    "social": 5,
+    "sleepQuality": 70,
+    "productivity": 5,
+    "notes": "Verifying demo check-in success",
+    "reasons": [
+      "Studies",
+      "Routine"
+    ]
+  },
+  {
+    "id": "mood-1786163349952-83",
+    "userId": "demo-user-id",
+    "date": "2026-08-08T04:29:09.951Z",
+    "mood": "Focused",
+    "intensity": 8,
+    "stress": 4,
+    "energy": 6,
+    "social": 5,
+    "sleepQuality": 70,
+    "productivity": 5,
+    "notes": "Verifying demo check-in success",
+    "reasons": [
+      "Studies",
+      "Routine"
+    ]
+  }
+]

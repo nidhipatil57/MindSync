@@ -1,0 +1,18 @@
+[
+  {
+    "id": "contact-1",
+    "userId": "demo-user-id",
+    "name": "Aarav (Brother)",
+    "phone": "+1234567890",
+    "email": "aarav@example.com",
+    "relation": "Family"
+  },
+  {
+    "id": "contact-2",
+    "userId": "demo-user-id",
+    "name": "Priya (Best Friend)",
+    "phone": "+0987654321",
+    "email": "priya@example.com",
+    "relation": "Friend"
+  }
+]

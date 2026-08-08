@@ -1,0 +1,20 @@
+{
+  "name": "mindsync-root",
+  "version": "1.0.0",
+  "description": "MindSync - AI Powered Wellness Platform",
+  "private": true,
+  "scripts": {
+    "install:client": "npm install --prefix client",
+    "install:server": "npm install --prefix server",
+    "install:all": "npm install && npm run install:client && npm run install:server",
+    "dev:client": "npm run dev --prefix client",
+    "dev:server": "npm start --prefix server",
+    "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\"",
+    "build:client": "npm run build --prefix client",
+    "build:server": "echo 'No build step for server'",
+    "build": "npm run build:client"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
