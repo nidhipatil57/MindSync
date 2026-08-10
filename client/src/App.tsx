@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'r
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { WellnessProvider, useWellness } from './context/WellnessContext';
 import { BackgroundBlobs } from './components/BackgroundBlobs';
+import { IntroLoader } from './components/IntroLoader';
 import { Sidebar } from './components/Sidebar';
 import { LandingPage } from './pages/LandingPage';
 import { LoginPage, SignupPage, ForgotPasswordPage } from './pages/AuthPages';
@@ -164,10 +165,17 @@ const AppLayout: React.FC = () => {
 };
 
 export const App: React.FC = () => {
+  const [showIntro, setShowIntro] = useState(true);
+
   return (
     <Router>
       <AuthProvider>
         <WellnessProvider>
+          {showIntro && (
+            <IntroLoader 
+              onComplete={() => setShowIntro(false)} 
+            />
+          )}
           <AppLayout />
         </WellnessProvider>
       </AuthProvider>
