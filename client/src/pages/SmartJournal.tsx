@@ -5,9 +5,10 @@ import {
 } from 'lucide-react';
 
 export const SmartJournal: React.FC = () => {
-  const { journals, addJournal } = useWellness();
+  const { journals, addJournal, deleteJournal, updateJournal } = useWellness();
 
   // Form states
+  const [editingId, setEditingId] = useState<string | null>(null);
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [gratitude, setGratitude] = useState('');
@@ -19,6 +20,26 @@ export const SmartJournal: React.FC = () => {
   // Search & active journal displays
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedJournalId, setSelectedJournalId] = useState<string | null>(null);
+
+  // Effect to populate form when an entry is selected
+  useEffect(() => {
+    const journal = journals.find(j => j.id === selectedJournalId);
+    if (journal) {
+      setEditingId(journal.id);
+      setTitle(journal.title);
+      setContent(journal.content);
+      setGratitude(journal.gratitude || '');
+      setReflection(journal.reflection || '');
+      setPrivateMode(journal.privateMode);
+    } else {
+      setEditingId(null);
+      setTitle('');
+      setContent('');
+      setGratitude('');
+      setReflection('');
+      setPrivateMode(false);
+    }
+  }, [selectedJournalId]);
 
   const prompts = [
     "What are three small things you are grateful for today?",
@@ -39,20 +60,24 @@ export const SmartJournal: React.FC = () => {
     if (!content.trim()) return;
     setSubmitting(true);
     try {
-      const saved = await addJournal({
-        title: title || 'Reflections',
-        content,
-        privateMode,
-        gratitude,
-        reflection
-      });
-      // Select the new journal
-      setSelectedJournalId(saved.id);
-      // Reset form
-      setTitle('');
-      setContent('');
-      setGratitude('');
-      setReflection('');
+      if (editingId) {
+        await updateJournal(editingId, {
+          title: title || 'Reflections',
+          content,
+          privateMode,
+          gratitude,
+          reflection
+        });
+      } else {
+        const saved = await addJournal({
+          title: title || 'Reflections',
+          content,
+          privateMode,
+          gratitude,
+          reflection
+        });
+        setSelectedJournalId(saved.id);
+      }
     } catch (err) {
       console.error(err);
     } finally {
@@ -194,14 +219,30 @@ export const SmartJournal: React.FC = () => {
                 </button>
               </div>
 
-              <button
-                type="submit"
-                disabled={submitting}
-                className="px-5 py-3 bg-slate-900 text-white rounded-xl text-xs font-semibold hover:bg-slate-800 shadow-xs flex items-center space-x-1.5 transition-all"
-              >
-                <Sparkles size={14} />
-                <span>{submitting ? 'Analyzing & Saving...' : 'Save & Analyze Entry'}</span>
-              </button>
+              <div className="flex space-x-2">
+                {editingId && (
+                  <button
+                    type="button"
+                    onClick={async () => {
+                      if (confirm("Are you sure you want to delete this journal entry?")) {
+                        await deleteJournal(editingId);
+                        setSelectedJournalId(null);
+                      }
+                    }}
+                    className="px-5 py-3 bg-red-50 text-accent-coral rounded-xl text-xs font-semibold hover:bg-red-100 border border-red-100 transition-all"
+                  >
+                    Delete Entry
+                  </button>
+                )}
+                <button
+                  type="submit"
+                  disabled={submitting}
+                  className="px-5 py-3 bg-slate-900 text-white rounded-xl text-xs font-semibold hover:bg-slate-800 shadow-xs flex items-center space-x-1.5 transition-all"
+                >
+                  <Sparkles size={14} />
+                  <span>{submitting ? 'Analyzing & Saving...' : editingId ? 'Update & Re-Analyze' : 'Save & Analyze Entry'}</span>
+                </button>
+              </div>
             </div>
 
           </form>
@@ -262,7 +303,16 @@ export const SmartJournal: React.FC = () => {
 
           {/* Search Index Panel */}
           <div className="bg-white/70 backdrop-blur-md p-6 rounded-3xl border border-white shadow-xs">
-            <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4 text-left">Reflections Directory</h3>
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider">Reflections Directory</h3>
+              <button
+                type="button"
+                onClick={() => setSelectedJournalId(null)}
+                className="text-[10px] bg-slate-100 hover:bg-slate-200 text-slate-700 px-2.5 py-1 rounded-md font-bold transition-all"
+              >
+                ＋ New Entry
+              </button>
+            </div>
             
             <div className="relative mb-4">
               <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-400">

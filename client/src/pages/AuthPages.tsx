@@ -128,7 +128,7 @@ export const LoginPage: React.FC = () => {
 
         <div className="my-6 flex items-center justify-between">
           <hr className="w-full border-slate-100" />
-          <span className="text-[11px] text-slate-400 px-3 uppercase shrink-0 font-bold tracking-wider">Demo / Google</span>
+          <span className="text-[11px] text-slate-400 px-3 uppercase shrink-0 font-bold tracking-wider">Demo</span>
           <hr className="w-full border-slate-100" />
         </div>
 

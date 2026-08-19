@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { useWellness } from '../context/WellnessContext';
 import { 
-  Users, Plus, AlertOctagon, Phone 
+  Users, Plus, AlertOctagon, Phone, Trash2, Edit 
 } from 'lucide-react';
 
 export const SafeCircle: React.FC = () => {
-  const { contacts, addContact, triggerSOS } = useWellness();
+  const { contacts, addContact, triggerSOS, deleteContact, updateContact, checkIns, addCheckIn } = useWellness();
 
   // New Contact Form State
+  const [editingId, setEditingId] = useState<string | null>(null);
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
@@ -22,15 +23,29 @@ export const SafeCircle: React.FC = () => {
     if (!name.trim() || !phone.trim()) return;
     setSubmitting(true);
     try {
-      await addContact({ name, phone, email, relation });
+      if (editingId) {
+        await updateContact(editingId, { name, phone, email, relation });
+        setEditingId(null);
+      } else {
+        await addContact({ name, phone, email, relation });
+      }
       setName('');
       setPhone('');
       setEmail('');
+      setRelation('Family');
     } catch (err) {
       console.error(err);
     } finally {
       setSubmitting(false);
     }
+  };
+
+  const handleEditInit = (contact: any) => {
+    setEditingId(contact.id);
+    setName(contact.name);
+    setPhone(contact.phone);
+    setEmail(contact.email || '');
+    setRelation(contact.relation || 'Family');
   };
 
   const handleTriggerSOS = () => {
@@ -87,23 +102,69 @@ export const SafeCircle: React.FC = () => {
       {/* Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         
-        {/* SOS Trigger Card */}
-        <section className="bg-red-50/50 backdrop-blur-md p-8 rounded-3xl border border-red-100 flex flex-col items-center justify-center text-center shadow-xs">
-          <div className="w-14 h-14 bg-red-100 text-red-600 rounded-2xl flex items-center justify-center mb-6 animate-pulse">
-            <AlertOctagon size={28} />
-          </div>
-          <h3 className="text-lg font-bold text-red-800">SOS Panic Button</h3>
-          <p className="text-xs text-red-600/70 mt-2 max-w-xs leading-relaxed">
-            One-click triggers simulated email and SMS broadcasts with real-time location tags to your trusted circle.
-          </p>
+        {/* Left Column containing SOS & Check-In */}
+        <div className="space-y-8">
+          {/* SOS Trigger Card */}
+          <section className="bg-red-50/50 backdrop-blur-md p-8 rounded-3xl border border-red-100 flex flex-col items-center justify-center text-center shadow-xs">
+            <div className="w-14 h-14 bg-red-100 text-red-600 rounded-2xl flex items-center justify-center mb-6 animate-pulse">
+              <AlertOctagon size={28} />
+            </div>
+            <h3 className="text-lg font-bold text-red-800">SOS Panic Button</h3>
+            <p className="text-xs text-red-600/70 mt-2 max-w-xs leading-relaxed">
+              One-click triggers simulated email and SMS broadcasts with real-time location tags to your trusted circle.
+            </p>
 
-          <button 
-            onClick={handleTriggerSOS}
-            className="mt-8 px-10 py-5 bg-red-600 hover:bg-red-700 text-white font-extrabold rounded-2xl shadow-lg shadow-red-600/20 active:scale-95 transition-all text-sm tracking-wide"
-          >
-            🚨 Trigger SOS Panic Alert
-          </button>
-        </section>
+            <button 
+              onClick={handleTriggerSOS}
+              className="mt-8 px-10 py-5 bg-red-600 hover:bg-red-700 text-white font-extrabold rounded-2xl shadow-lg shadow-red-600/20 active:scale-95 transition-all text-sm tracking-wide w-full"
+            >
+              🚨 Trigger SOS Panic Alert
+            </button>
+          </section>
+
+          {/* Daily Check-In Card */}
+          <section className="bg-white/70 backdrop-blur-md p-6 rounded-3xl border border-white shadow-xs text-left">
+            <h3 className="text-sm font-bold text-slate-800 mb-1">Daily Check-In</h3>
+            <p className="text-xs text-slate-400 mb-4">Let your circle know how you are doing today</p>
+            <div className="flex flex-col space-y-2 mb-4">
+              <button
+                onClick={() => addCheckIn("I'm okay")}
+                className="w-full py-2 bg-emerald-50 hover:bg-emerald-100/70 text-emerald-700 border border-emerald-100 rounded-xl text-xs font-semibold transition-all text-center"
+              >
+                🟢 I'm okay
+              </button>
+              <button
+                onClick={() => addCheckIn("I need someone to talk to")}
+                className="w-full py-2 bg-amber-50 hover:bg-amber-100/70 text-amber-700 border border-amber-100 rounded-xl text-xs font-semibold transition-all text-center"
+              >
+                Reflect: I need to talk
+              </button>
+              <button
+                onClick={() => addCheckIn("I need support")}
+                className="w-full py-2 bg-red-50 hover:bg-red-100/70 text-red-700 border border-red-100 rounded-xl text-xs font-semibold transition-all text-center"
+              >
+                ⚠️ I need support
+              </button>
+            </div>
+
+            {/* Check-In History */}
+            <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider block mb-2">Check-in history</span>
+            <div className="space-y-1.5 max-h-[120px] overflow-y-auto pr-1 hide-scrollbar">
+              {checkIns.length === 0 ? (
+                <p className="text-[10px] text-slate-400">No check-ins logged yet today.</p>
+              ) : (
+                [...checkIns].reverse().map(check => (
+                  <div key={check.id} className="flex justify-between items-center text-[10px] text-slate-600 bg-slate-50 p-2 rounded-lg border border-slate-100/50">
+                    <span className="font-semibold">{check.status}</span>
+                    <span className="text-[9px] text-slate-400">
+                      {new Date(check.date).toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' })}
+                    </span>
+                  </div>
+                ))
+              )}
+            </div>
+          </section>
+        </div>
 
         {/* Contacts Directory */}
         <section className="bg-white/70 backdrop-blur-md p-6 rounded-3xl border border-white shadow-xs text-left">
@@ -138,6 +199,21 @@ export const SafeCircle: React.FC = () => {
                         <span>{c.phone}</span>
                       </p>
                     </div>
+                  </div>
+
+                  <div className="flex space-x-1">
+                    <button 
+                      onClick={() => handleEditInit(c)}
+                      className="p-1.5 text-slate-400 hover:text-slate-700 rounded-lg hover:bg-slate-100 transition-all"
+                    >
+                      <Edit size={12} />
+                    </button>
+                    <button 
+                      onClick={() => deleteContact(c.id)}
+                      className="p-1.5 text-slate-400 hover:text-accent-coral rounded-lg hover:bg-slate-100 transition-all"
+                    >
+                      <Trash2 size={12} />
+                    </button>
                   </div>
                 </div>
               ))
@@ -185,12 +261,29 @@ export const SafeCircle: React.FC = () => {
               </select>
             </div>
 
-            <button
-              type="submit" disabled={submitting}
-              className="w-full py-3.5 bg-slate-900 text-white rounded-xl text-xs font-semibold hover:bg-slate-800 shadow-xs transition-all"
-            >
-              <span>{submitting ? 'Registering...' : 'Register Circle Member'}</span>
-            </button>
+            <div className="flex space-x-2">
+              <button
+                type="submit" disabled={submitting}
+                className="w-full py-3.5 bg-slate-900 text-white rounded-xl text-xs font-semibold hover:bg-slate-800 shadow-xs transition-all flex-1"
+              >
+                <span>{submitting ? 'Registering...' : editingId ? 'Update Circle Member' : 'Register Circle Member'}</span>
+              </button>
+              {editingId && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setEditingId(null);
+                    setName('');
+                    setPhone('');
+                    setEmail('');
+                    setRelation('Family');
+                  }}
+                  className="px-4 py-3.5 bg-slate-100 text-slate-600 rounded-xl text-xs font-semibold hover:bg-slate-200 transition-all"
+                >
+                  Cancel
+                </button>
+              )}
+            </div>
           </form>
         </section>
 

@@ -44,6 +44,8 @@ interface Task {
   category: string;
   completed: boolean;
   date: string;
+  priority?: string;
+  description?: string;
 }
 
 interface SleepLog {
@@ -90,17 +92,29 @@ interface WellnessContextType {
   burnout: BurnoutInfo | null;
   coachBriefing: string;
   loading: boolean;
+  checkIns: { id: string; status: string; date: string }[];
+  addCheckIn: (status: string) => Promise<void>;
   refreshAll: () => Promise<void>;
   addMood: (moodData: Partial<MoodLog>) => Promise<void>;
+  deleteMood: (id: string) => Promise<void>;
+  updateMood: (id: string, data: Partial<MoodLog>) => Promise<void>;
   addJournal: (journalData: Partial<JournalEntry>) => Promise<JournalEntry>;
+  deleteJournal: (id: string) => Promise<void>;
+  updateJournal: (id: string, data: Partial<JournalEntry>) => Promise<void>;
   addHabit: (name: string, target: string, frequency: string) => Promise<void>;
   toggleHabit: (id: string) => Promise<void>;
   deleteHabit: (id: string) => Promise<void>;
-  addTask: (title: string, category?: string) => Promise<void>;
+  updateHabit: (id: string, data: Partial<Habit>) => Promise<void>;
+  addTask: (title: string, category?: string, priority?: string, date?: string) => Promise<void>;
   toggleTask: (id: string) => Promise<void>;
   deleteTask: (id: string) => Promise<void>;
+  updateTask: (id: string, data: Partial<Task>) => Promise<void>;
   addSleep: (sleepData: Partial<SleepLog>) => Promise<void>;
+  deleteSleep: (id: string) => Promise<void>;
+  updateSleep: (id: string, data: Partial<SleepLog>) => Promise<void>;
   addContact: (contactData: Partial<Contact>) => Promise<void>;
+  deleteContact: (id: string) => Promise<void>;
+  updateContact: (id: string, data: Partial<Contact>) => Promise<void>;
   triggerSOS: () => Promise<void>;
   markNotificationsRead: () => void;
 }
@@ -118,13 +132,14 @@ export const WellnessProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [burnout, setBurnout] = useState<BurnoutInfo | null>(null);
   const [coachBriefing, setCoachBriefing] = useState<string>('');
+  const [checkIns, setCheckIns] = useState<{ id: string; status: string; date: string }[]>([]);
   const [loading, setLoading] = useState(false);
 
   const refreshAll = async () => {
     if (!user) return;
     setLoading(true);
     try {
-            const [moodList, journalList, habitList, taskList, sleepList, contactList, burnoutData, coachData] = await Promise.all([
+            const [moodList, journalList, habitList, taskList, sleepList, contactList, burnoutData, coachData, checkInList] = await Promise.all([
         api.get('/api/moods'),
         api.get('/api/journals'),
         api.get('/api/habits'),
@@ -132,7 +147,8 @@ export const WellnessProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         api.get('/api/sleep'),
         api.get('/api/circle'),
         api.get('/api/burnout'),
-        api.get('/api/coach/briefing')
+        api.get('/api/coach/briefing'),
+        api.get('/api/circle/checkin')
       ]);
 
       setMoods(moodList);
@@ -143,6 +159,7 @@ export const WellnessProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       setContacts(contactList);
       setBurnout(burnoutData || null);
       setCoachBriefing(coachData?.briefing || '');
+      setCheckIns(checkInList || []);
       
       // Let's mock notifications list since we didn't add a router for notifications (we can just add it to Express or pull it from a simple client fetch fallback).
       // Wait, we can fetch notifications by adding a simple endpoint, or we can just mock them on the client since they are soft notices anyway!
@@ -221,9 +238,9 @@ export const WellnessProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     }
   };
 
-  const addTask = async (title: string, category?: string) => {
+  const addTask = async (title: string, category?: string, priority?: string, date?: string) => {
     try {
-      const newTask = await api.post('/api/tasks', { title, category });
+      const newTask = await api.post('/api/tasks', { title, category, priority, date });
       setTasks(prev => [...prev, newTask]);
       await refreshAll();
     } catch (err) {
@@ -288,14 +305,127 @@ export const WellnessProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     }
   };
 
+  const deleteMood = async (id: string) => {
+    try {
+      await api.delete(`/api/moods/${id}`);
+      setMoods(prev => prev.filter(m => m.id !== id));
+      await refreshProfile();
+      await refreshAll();
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const updateMood = async (id: string, data: Partial<MoodLog>) => {
+    try {
+      const updated = await api.put(`/api/moods/${id}`, data);
+      setMoods(prev => prev.map(m => m.id === id ? updated : m));
+      await refreshProfile();
+      await refreshAll();
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const deleteJournal = async (id: string) => {
+    try {
+      await api.delete(`/api/journals/${id}`);
+      setJournals(prev => prev.filter(j => j.id !== id));
+      await refreshAll();
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const updateJournal = async (id: string, data: Partial<JournalEntry>) => {
+    try {
+      const updated = await api.put(`/api/journals/${id}`, data);
+      setJournals(prev => prev.map(j => j.id === id ? updated : j));
+      await refreshAll();
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const deleteSleep = async (id: string) => {
+    try {
+      await api.delete(`/api/sleep/${id}`);
+      setSleep(prev => prev.filter(s => s.id !== id));
+      await refreshProfile();
+      await refreshAll();
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const updateSleep = async (id: string, data: Partial<SleepLog>) => {
+    try {
+      const updated = await api.put(`/api/sleep/${id}`, data);
+      setSleep(prev => prev.map(s => s.id === id ? updated : s));
+      await refreshProfile();
+      await refreshAll();
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const deleteContact = async (id: string) => {
+    try {
+      await api.delete(`/api/circle/${id}`);
+      setContacts(prev => prev.filter(c => c.id !== id));
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const updateContact = async (id: string, data: Partial<Contact>) => {
+    try {
+      const updated = await api.put(`/api/circle/${id}`, data);
+      setContacts(prev => prev.map(c => c.id === id ? updated : c));
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const updateHabit = async (id: string, data: Partial<Habit>) => {
+    try {
+      const updated = await api.put(`/api/habits/${id}`, data);
+      setHabits(prev => prev.map(h => h.id === id ? updated : h));
+      await refreshProfile();
+      await refreshAll();
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const updateTask = async (id: string, data: Partial<Task>) => {
+    try {
+      const updated = await api.put(`/api/tasks/${id}`, data);
+      setTasks(prev => prev.map(t => t.id === id ? updated : t));
+      await refreshProfile();
+      await refreshAll();
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const addCheckIn = async (status: string) => {
+    try {
+      const check = await api.post('/api/circle/checkin', { status });
+      setCheckIns(prev => [...prev, check]);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   const markNotificationsRead = () => {
     setNotifications(prev => prev.map(n => ({ ...n, read: true })));
   };
 
   return (
     <WellnessContext.Provider value={{
-      moods, journals, habits, tasks, sleep, contacts, notifications, burnout, coachBriefing, loading,
-      refreshAll, addMood, addJournal, addHabit, toggleHabit, deleteHabit, addTask, toggleTask, deleteTask, addSleep, addContact, triggerSOS, markNotificationsRead
+      moods, journals, habits, tasks, sleep, contacts, notifications, burnout, coachBriefing, checkIns, loading,
+      refreshAll, addMood, deleteMood, updateMood, addJournal, deleteJournal, updateJournal, addHabit, toggleHabit, deleteHabit, updateHabit, addTask, toggleTask, deleteTask, updateTask, addSleep, deleteSleep, updateSleep, addContact, deleteContact, updateContact, addCheckIn, triggerSOS, markNotificationsRead
     }}>
       {children}
     </WellnessContext.Provider>

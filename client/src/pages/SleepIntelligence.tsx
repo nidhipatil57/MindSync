@@ -1,16 +1,17 @@
 import React, { useState } from 'react';
 import { useWellness } from '../context/WellnessContext';
 import { 
-  Moon, Plus, Music, Play
+  Moon, Plus, Music, Play, Trash2, Edit, Calendar
 } from 'lucide-react';
 import { 
   ResponsiveContainer, AreaChart, Area, XAxis, YAxis, Tooltip 
 } from 'recharts';
 
 export const SleepIntelligence: React.FC = () => {
-  const { sleep, addSleep } = useWellness();
+  const { sleep, addSleep, deleteSleep, updateSleep } = useWellness();
 
   // Form states
+  const [editingId, setEditingId] = useState<string | null>(null);
   const [duration, setDuration] = useState(7.5);
   const [quality, setQuality] = useState(80);
   const [bedtime, setBedtime] = useState('22:45');
@@ -30,17 +31,35 @@ export const SleepIntelligence: React.FC = () => {
     e.preventDefault();
     setSubmitting(true);
     try {
-      await addSleep({
-        duration,
-        quality,
-        bedtime,
-        wakeTime
-      });
+      if (editingId) {
+        await updateSleep(editingId, {
+          duration,
+          quality,
+          bedtime,
+          wakeTime
+        });
+        setEditingId(null);
+      } else {
+        await addSleep({
+          duration,
+          quality,
+          bedtime,
+          wakeTime
+        });
+      }
     } catch (err) {
       console.error(err);
     } finally {
       setSubmitting(false);
     }
+  };
+
+  const handleEditInit = (log: any) => {
+    setEditingId(log.id);
+    setDuration(log.duration);
+    setQuality(log.quality);
+    setBedtime(log.bedtime);
+    setWakeTime(log.wakeTime);
   };
 
   const togglePlay = (id: string) => {
@@ -117,14 +136,31 @@ export const SleepIntelligence: React.FC = () => {
               />
             </div>
 
-            <button
-              type="submit"
-              disabled={submitting}
-              className="w-full py-3.5 bg-slate-900 text-white rounded-xl text-xs font-semibold hover:bg-slate-800 shadow-xs flex items-center justify-center space-x-1.5 transition-all"
-            >
-              <Plus size={14} />
-              <span>{submitting ? 'Logging...' : 'Log Sleep Log'}</span>
-            </button>
+            <div className="flex space-x-2">
+              <button
+                type="submit"
+                disabled={submitting}
+                className="w-full py-3.5 bg-slate-900 text-white rounded-xl text-xs font-semibold hover:bg-slate-800 shadow-xs flex items-center justify-center space-x-1.5 transition-all"
+              >
+                <Plus size={14} />
+                <span>{submitting ? 'Logging...' : editingId ? 'Update Sleep Log' : 'Log Sleep Log'}</span>
+              </button>
+              {editingId && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setEditingId(null);
+                    setDuration(7.5);
+                    setQuality(80);
+                    setBedtime('22:45');
+                    setWakeTime('06:15');
+                  }}
+                  className="px-4 py-3.5 bg-slate-100 text-slate-600 rounded-xl text-xs font-semibold hover:bg-slate-200 transition-all"
+                >
+                  Cancel
+                </button>
+              )}
+            </div>
           </form>
         </section>
 
@@ -153,14 +189,22 @@ export const SleepIntelligence: React.FC = () => {
           </div>
 
           {/* Sleep debt metrics */}
-          <div className="grid grid-cols-2 gap-4 border-t border-slate-100 pt-4 mt-4">
+          <div className="grid grid-cols-3 gap-2 border-t border-slate-100 pt-4 mt-4 text-center">
             <div className="text-left">
-              <span className="text-[10px] text-slate-400 font-bold uppercase">Estimated Sleep Debt</span>
-              <h4 className="text-lg font-extrabold text-slate-800">{lastLog.sleepDebt} hrs</h4>
+              <span className="text-[10px] text-slate-400 font-bold uppercase block">Sleep Debt</span>
+              <h4 className="text-base font-extrabold text-slate-800">{lastLog.sleepDebt} hrs</h4>
             </div>
             <div className="text-left">
-              <span className="text-[10px] text-slate-400 font-bold uppercase">Sleep Score Rating</span>
-              <h4 className="text-lg font-extrabold text-accent-lavender">{lastLog.quality} / 100</h4>
+              <span className="text-[10px] text-slate-400 font-bold uppercase block">Sleep Score</span>
+              <h4 className="text-base font-extrabold text-accent-lavender">{lastLog.quality}/100</h4>
+            </div>
+            <div className="text-left">
+              <span className="text-[10px] text-slate-400 font-bold uppercase block">Average sleep</span>
+              <h4 className="text-base font-extrabold text-slate-800">
+                {sleep.length > 0 
+                  ? (sleep.reduce((acc, s) => acc + s.duration, 0) / sleep.length).toFixed(1) 
+                  : 7.0} hrs
+              </h4>
             </div>
           </div>
         </section>
@@ -201,6 +245,70 @@ export const SleepIntelligence: React.FC = () => {
         </section>
 
       </div>
+
+      {/* Sleep Logs Timeline */}
+      <section className="bg-white/50 backdrop-blur-md p-6 rounded-3xl border border-white/60">
+        <h3 className="text-lg font-bold text-slate-800 mb-6 flex items-center space-x-2">
+          <Calendar size={18} className="text-accent-lavender" />
+          <span>Sleep Logs History</span>
+        </h3>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-h-[300px] overflow-y-auto pr-1">
+          {[...sleep].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()).map(log => (
+            <div 
+              key={log.id} 
+              className="bg-white p-4 rounded-2xl border border-slate-100 flex flex-col justify-between text-left space-y-3"
+            >
+              <div className="flex justify-between items-start">
+                <div className="flex items-center space-x-2">
+                  <span className="text-xl">🌙</span>
+                  <div>
+                    <h4 className="text-xs font-bold text-slate-800">{log.duration} hrs slept</h4>
+                    <span className="text-[9px] text-slate-400">
+                      {new Date(log.date).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
+                    </span>
+                  </div>
+                </div>
+                <div className="flex items-center space-x-1.5">
+                  <button 
+                    type="button"
+                    onClick={() => handleEditInit(log)}
+                    className="p-1 text-slate-300 hover:text-slate-600 rounded-md hover:bg-slate-50"
+                  >
+                    <Edit size={11} />
+                  </button>
+                  <button 
+                    type="button"
+                    onClick={() => {
+                      if (confirm("Are you sure you want to delete this sleep log?")) {
+                        deleteSleep(log.id);
+                      }
+                    }}
+                    className="p-1 text-slate-300 hover:text-accent-coral rounded-md hover:bg-slate-50"
+                  >
+                    <Trash2 size={11} />
+                  </button>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-3 gap-2 border-t border-slate-50 pt-2 text-center text-[10px]">
+                <div>
+                  <span className="text-slate-400 block">Bedtime</span>
+                  <span className="font-semibold text-slate-700">{log.bedtime}</span>
+                </div>
+                <div>
+                  <span className="text-slate-400 block">Wake Time</span>
+                  <span className="font-semibold text-slate-700">{log.wakeTime}</span>
+                </div>
+                <div>
+                  <span className="text-slate-400 block">Quality</span>
+                  <span className="font-semibold text-slate-700">{log.quality}%</span>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
     </div>
   );
 };

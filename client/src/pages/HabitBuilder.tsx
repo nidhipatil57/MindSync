@@ -2,13 +2,14 @@ import React, { useState } from 'react';
 import { useWellness } from '../context/WellnessContext';
 import { 
   Sparkles, CheckCircle2, Award, Plus, Trash2, 
-  Flame, BookOpen, Droplet 
+  Flame, BookOpen, Droplet, Edit 
 } from 'lucide-react';
 
 export const HabitBuilder: React.FC = () => {
-  const { habits, addHabit, toggleHabit, deleteHabit } = useWellness();
+  const { habits, addHabit, toggleHabit, deleteHabit, updateHabit } = useWellness();
 
   // Create Form State
+  const [editingId, setEditingId] = useState<string | null>(null);
   const [name, setName] = useState('');
   const [target, setTarget] = useState('2 Liters');
   const [frequency, setFrequency] = useState('Daily');
@@ -22,14 +23,27 @@ export const HabitBuilder: React.FC = () => {
     if (!name.trim()) return;
     setSubmitting(true);
     try {
-      await addHabit(name, target, frequency);
+      if (editingId) {
+        await updateHabit(editingId, { name, target, frequency });
+        setEditingId(null);
+      } else {
+        await addHabit(name, target, frequency);
+      }
       setName('');
-      setTarget('');
+      setTarget('2 Liters');
+      setFrequency('Daily');
     } catch (e) {
       console.error(e);
     } finally {
       setSubmitting(false);
     }
+  };
+
+  const handleEditInit = (habit: any) => {
+    setEditingId(habit.id);
+    setName(habit.name);
+    setTarget(habit.target);
+    setFrequency(habit.frequency);
   };
 
   const handleToggle = async (id: string, currentlyChecked: boolean) => {
@@ -139,6 +153,13 @@ export const HabitBuilder: React.FC = () => {
                       </button>
 
                       <button 
+                        onClick={() => handleEditInit(habit)}
+                        className="p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-50 rounded-xl transition-all"
+                      >
+                        <Edit size={16} />
+                      </button>
+
+                      <button 
                         onClick={() => deleteHabit(habit.id)}
                         className="p-2 text-slate-400 hover:text-accent-coral hover:bg-red-50 rounded-xl transition-all"
                       >
@@ -194,13 +215,29 @@ export const HabitBuilder: React.FC = () => {
               </select>
             </div>
 
-            <button
-              type="submit"
-              disabled={submitting}
-              className="w-full py-3.5 bg-slate-900 text-white rounded-xl text-xs font-semibold hover:bg-slate-800 shadow-xs transition-all"
-            >
-              <span>{submitting ? 'Creating...' : 'Create Habit'}</span>
-            </button>
+            <div className="flex space-x-2">
+              <button
+                type="submit"
+                disabled={submitting}
+                className="w-full py-3.5 bg-slate-900 text-white rounded-xl text-xs font-semibold hover:bg-slate-800 shadow-xs transition-all"
+              >
+                <span>{submitting ? 'Saving...' : editingId ? 'Update Habit' : 'Create Habit'}</span>
+              </button>
+              {editingId && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setEditingId(null);
+                    setName('');
+                    setTarget('2 Liters');
+                    setFrequency('Daily');
+                  }}
+                  className="px-4 py-3.5 bg-slate-100 text-slate-600 rounded-xl text-xs font-semibold hover:bg-slate-200 transition-all"
+                >
+                  Cancel
+                </button>
+              )}
+            </div>
           </form>
 
           {/* Habit recommendations block */}

@@ -1,16 +1,17 @@
 import React, { useState } from 'react';
 import { useWellness } from '../context/WellnessContext';
 import { 
-  Plus, Sparkles, Calendar 
+  Plus, Sparkles, Calendar, Trash2, Edit 
 } from 'lucide-react';
 import { 
   ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip 
 } from 'recharts';
 
 export const MoodTracker: React.FC = () => {
-  const { moods, addMood } = useWellness();
+  const { moods, addMood, deleteMood, updateMood } = useWellness();
 
   // Logging Form State
+  const [editingId, setEditingId] = useState<string | null>(null);
   const [selectedMood, setSelectedMood] = useState('Calm');
   const [intensity, setIntensity] = useState(7);
   const [stress, setStress] = useState(4);
@@ -39,14 +40,26 @@ export const MoodTracker: React.FC = () => {
     e.preventDefault();
     setSubmitting(true);
     try {
-      await addMood({
-        mood: selectedMood,
-        intensity,
-        stress,
-        energy,
-        notes,
-        reasons
-      });
+      if (editingId) {
+        await updateMood(editingId, {
+          mood: selectedMood,
+          intensity,
+          stress,
+          energy,
+          notes,
+          reasons
+        });
+        setEditingId(null);
+      } else {
+        await addMood({
+          mood: selectedMood,
+          intensity,
+          stress,
+          energy,
+          notes,
+          reasons
+        });
+      }
       // Reset
       setNotes('');
       setReasons([]);
@@ -55,6 +68,16 @@ export const MoodTracker: React.FC = () => {
     } finally {
       setSubmitting(false);
     }
+  };
+
+  const handleEditInit = (log: any) => {
+    setEditingId(log.id);
+    setSelectedMood(log.mood);
+    setIntensity(log.intensity);
+    setStress(log.stress);
+    setEnergy(log.energy);
+    setNotes(log.notes);
+    setReasons(log.reasons);
   };
 
   // Process data for mood distributions chart
@@ -197,14 +220,29 @@ export const MoodTracker: React.FC = () => {
             </div>
 
             {/* Submit */}
-            <button
-              type="submit"
-              disabled={submitting}
-              className="px-6 py-3 bg-slate-900 text-white rounded-2xl text-xs font-semibold hover:bg-slate-800 shadow-md active:scale-95 transition-all flex items-center space-x-1.5"
-            >
-              <Plus size={14} />
-              <span>{submitting ? 'Logging...' : 'Log Mood Check-In'}</span>
-            </button>
+            <div className="flex space-x-2">
+              <button
+                type="submit"
+                disabled={submitting}
+                className="px-6 py-3 bg-slate-900 text-white rounded-2xl text-xs font-semibold hover:bg-slate-800 shadow-md active:scale-95 transition-all flex items-center space-x-1.5"
+              >
+                <Plus size={14} />
+                <span>{submitting ? 'Logging...' : editingId ? 'Update Mood Check-In' : 'Log Mood Check-In'}</span>
+              </button>
+              {editingId && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setEditingId(null);
+                    setNotes('');
+                    setReasons([]);
+                  }}
+                  className="px-4 py-3 bg-slate-100 text-slate-600 rounded-2xl text-xs font-semibold hover:bg-slate-200 transition-all"
+                >
+                  Cancel Edit
+                </button>
+              )}
+            </div>
 
           </form>
         </section>
@@ -266,12 +304,32 @@ export const MoodTracker: React.FC = () => {
                     </span>
                   </div>
                 </div>
-                <div className="flex space-x-1">
-                  {log.reasons.slice(0, 2).map(r => (
-                    <span key={r} className="text-[9px] bg-slate-50 border border-slate-100 text-slate-400 px-2 py-0.5 rounded-full">
-                      {r}
-                    </span>
-                  ))}
+                <div className="flex items-center space-x-1.5">
+                  <div className="flex space-x-1">
+                    {log.reasons.slice(0, 2).map(r => (
+                      <span key={r} className="text-[9px] bg-slate-50 border border-slate-100 text-slate-400 px-2 py-0.5 rounded-full">
+                        {r}
+                      </span>
+                    ))}
+                  </div>
+                  <button 
+                    type="button"
+                    onClick={() => handleEditInit(log)}
+                    className="p-1 text-slate-300 hover:text-slate-600 rounded-md hover:bg-slate-50"
+                  >
+                    <Edit size={11} />
+                  </button>
+                  <button 
+                    type="button"
+                    onClick={() => {
+                      if (confirm("Are you sure you want to delete this mood log?")) {
+                        deleteMood(log.id);
+                      }
+                    }}
+                    className="p-1 text-slate-300 hover:text-accent-coral rounded-md hover:bg-slate-50"
+                  >
+                    <Trash2 size={11} />
+                  </button>
                 </div>
               </div>
 

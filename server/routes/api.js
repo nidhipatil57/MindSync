@@ -185,6 +185,22 @@ router.post('/moods', authMiddleware, (req, res) => {
   res.status(201).json(newLog);
 });
 
+router.put('/moods/:id', authMiddleware, (req, res) => {
+  const log = db.findOne('moodLogs', { id: req.params.id, userId: req.user.id });
+  if (!log) return res.status(404).json({ message: 'Mood log not found.' });
+
+  const updated = db.update('moodLogs', { id: req.params.id }, req.body);
+  res.json(updated);
+});
+
+router.delete('/moods/:id', authMiddleware, (req, res) => {
+  const log = db.findOne('moodLogs', { id: req.params.id, userId: req.user.id });
+  if (!log) return res.status(404).json({ message: 'Mood log not found.' });
+
+  db.delete('moodLogs', { id: req.params.id });
+  res.json({ message: 'Mood log deleted successfully.' });
+});
+
 // ==========================================
 // SMART JOURNAL ROUTES
 // ==========================================
@@ -216,6 +232,22 @@ router.post('/journals', authMiddleware, async (req, res) => {
   res.status(201).json(entry);
 });
 
+router.put('/journals/:id', authMiddleware, async (req, res) => {
+  const entry = db.findOne('journalEntries', { id: req.params.id, userId: req.user.id });
+  if (!entry) return res.status(404).json({ message: 'Journal entry not found.' });
+
+  const updated = db.update('journalEntries', { id: req.params.id }, req.body);
+  res.json(updated);
+});
+
+router.delete('/journals/:id', authMiddleware, (req, res) => {
+  const entry = db.findOne('journalEntries', { id: req.params.id, userId: req.user.id });
+  if (!entry) return res.status(404).json({ message: 'Journal entry not found.' });
+
+  db.delete('journalEntries', { id: req.params.id });
+  res.json({ message: 'Journal entry deleted successfully.' });
+});
+
 // ==========================================
 // SLEEP LOGS
 // ==========================================
@@ -241,6 +273,22 @@ router.post('/sleep', authMiddleware, (req, res) => {
   });
 
   res.status(201).json(newSleep);
+});
+
+router.put('/sleep/:id', authMiddleware, (req, res) => {
+  const log = db.findOne('sleepData', { id: req.params.id, userId: req.user.id });
+  if (!log) return res.status(404).json({ message: 'Sleep log not found.' });
+
+  const updated = db.update('sleepData', { id: req.params.id }, req.body);
+  res.json(updated);
+});
+
+router.delete('/sleep/:id', authMiddleware, (req, res) => {
+  const log = db.findOne('sleepData', { id: req.params.id, userId: req.user.id });
+  if (!log) return res.status(404).json({ message: 'Sleep log not found.' });
+
+  db.delete('sleepData', { id: req.params.id });
+  res.json({ message: 'Sleep log deleted successfully.' });
 });
 
 // ==========================================
@@ -298,6 +346,14 @@ router.delete('/habits/:id', authMiddleware, (req, res) => {
   res.json({ message: 'Habit deleted.' });
 });
 
+router.put('/habits/:id', authMiddleware, (req, res) => {
+  const habit = db.findOne('habits', { id: req.params.id, userId: req.user.id });
+  if (!habit) return res.status(404).json({ message: 'Habit not found.' });
+
+  const updated = db.update('habits', { id: req.params.id }, req.body);
+  res.json(updated);
+});
+
 // ==========================================
 // TASKS (PRODUCTIVITY PLANNER)
 // ==========================================
@@ -307,7 +363,7 @@ router.get('/tasks', authMiddleware, (req, res) => {
 });
 
 router.post('/tasks', authMiddleware, (req, res) => {
-  const { title, category, date } = req.body;
+  const { title, category, date, priority, description } = req.body;
   if (!title) return res.status(400).json({ message: 'Task title is required.' });
 
   const todayStr = new Date().toISOString().split('T')[0];
@@ -316,7 +372,9 @@ router.post('/tasks', authMiddleware, (req, res) => {
     title,
     category: category || 'General',
     completed: false,
-    date: date || todayStr
+    date: date || todayStr,
+    priority: priority || 'Medium',
+    description: description || ''
   });
 
   res.status(201).json(newTask);
@@ -336,6 +394,14 @@ router.delete('/tasks/:id', authMiddleware, (req, res) => {
 
   db.delete('tasks', { id: req.params.id });
   res.json({ message: 'Task deleted successfully.' });
+});
+
+router.put('/tasks/:id', authMiddleware, (req, res) => {
+  const task = db.findOne('tasks', { id: req.params.id, userId: req.user.id });
+  if (!task) return res.status(404).json({ message: 'Task not found.' });
+
+  const updated = db.update('tasks', { id: req.params.id }, req.body);
+  res.json(updated);
 });
 
 // ==========================================
@@ -593,6 +659,26 @@ router.get('/circle', authMiddleware, (req, res) => {
   res.json(contacts);
 });
 
+let checkIns = [];
+
+router.post('/circle/checkin', authMiddleware, (req, res) => {
+  const { status } = req.body;
+  if (!status) return res.status(400).json({ message: 'Status is required.' });
+
+  const newCheck = {
+    id: `checkin-${Date.now()}`,
+    userId: req.user.id,
+    status,
+    date: new Date().toISOString()
+  };
+  checkIns.push(newCheck);
+  res.status(201).json(newCheck);
+});
+
+router.get('/circle/checkin', authMiddleware, (req, res) => {
+  res.json(checkIns.filter(c => c.userId === req.user.id));
+});
+
 router.post('/circle', authMiddleware, (req, res) => {
   const { name, phone, email, relation } = req.body;
   if (!name || !phone) return res.status(400).json({ message: 'Name and Phone are required.' });
@@ -605,6 +691,22 @@ router.post('/circle', authMiddleware, (req, res) => {
     relation: relation || 'Contact'
   });
   res.status(201).json(contact);
+});
+
+router.put('/circle/:id', authMiddleware, (req, res) => {
+  const contact = db.findOne('safeCircle', { id: req.params.id, userId: req.user.id });
+  if (!contact) return res.status(404).json({ message: 'Contact not found.' });
+
+  const updated = db.update('safeCircle', { id: req.params.id }, req.body);
+  res.json(updated);
+});
+
+router.delete('/circle/:id', authMiddleware, (req, res) => {
+  const contact = db.findOne('safeCircle', { id: req.params.id, userId: req.user.id });
+  if (!contact) return res.status(404).json({ message: 'Contact not found.' });
+
+  db.delete('safeCircle', { id: req.params.id });
+  res.json({ message: 'Contact deleted successfully.' });
 });
 
 // ==========================================
