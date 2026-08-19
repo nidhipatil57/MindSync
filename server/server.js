@@ -70,6 +70,10 @@ app.use((err, req, res, next) => {
 });
 
 // Start Server
-app.listen(PORT, () => {
-  logger.info(`MindSync Express server running on port ${PORT}`);
-});
+if (process.env.VERCEL !== '1') {
+  app.listen(PORT, () => {
+    logger.info(`MindSync Express server running on port ${PORT}`);
+  });
+}
+
+export default app;

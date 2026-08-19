@@ -3,13 +3,25 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import bcrypt from 'bcryptjs';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-const DATA_DIR = path.join(__dirname, '..', 'data');
+let DATA_DIR = path.join(process.cwd(), 'server', 'data');
+if (!fs.existsSync(DATA_DIR)) {
+  const altDir = path.join(process.cwd(), 'data');
+  if (fs.existsSync(altDir)) {
+    DATA_DIR = altDir;
+  } else {
+    const __filename = fileURLToPath(import.meta.url);
+    const __dirname = path.dirname(__filename);
+    DATA_DIR = path.join(__dirname, '..', 'data');
+  }
+}
 
 // Helper to make sure directory exists
 if (!fs.existsSync(DATA_DIR)) {
-  fs.mkdirSync(DATA_DIR, { recursive: true });
+  try {
+    fs.mkdirSync(DATA_DIR, { recursive: true });
+  } catch (err) {
+    console.error('Failed to create data directory:', err);
+  }
 }
 
 const getFilePath = (collection) => path.join(DATA_DIR, `${collection}.json`);

@@ -138,17 +138,10 @@ export const LoginPage: React.FC = () => {
             disabled={loading}
             className="w-full py-3.5 bg-accent-sky/10 border border-accent-sky/15 text-accent-sky font-semibold rounded-xl text-sm hover:bg-accent-sky/15 transition-all flex items-center justify-center"
           >
-            🚀 Enter Demo Workspace (One-Click)
+            Enter Demo Workspace
           </button>
           
-          <button 
-            type="button" 
-            onClick={loadDemoCredentials}
-            className="w-full py-3 bg-white border border-slate-200/60 rounded-xl text-sm hover:bg-slate-50 text-slate-600 transition-all flex items-center justify-center space-x-2"
-          >
-            <span className="font-bold text-red-500">G</span>
-            <span className="text-xs">Sign in with Google</span>
-          </button>
+
         </div>
 
         <p className="mt-8 text-center text-xs text-slate-500">
